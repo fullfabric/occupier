@@ -1,0 +1,9 @@
+development:
+  database: FF_development_default
+  host: 127.0.0.1
+  port: 27017
+
+test:
+  database: FF_test_default
+  host: 127.0.0.1
+  port: 27017
