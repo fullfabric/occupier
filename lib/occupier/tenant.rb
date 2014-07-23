@@ -9,8 +9,8 @@ module Occupier
 
       raise ::Occupier::InvalidTenantName.new(handle) unless handle =~ /^[a-z]+$/
 
-      @handle = handle
-      @connection = connection
+      @handle      = handle
+      @connection  = connection
       @environment = connection.environment
 
     end
@@ -21,7 +21,7 @@ module Occupier
     # An array with all the tenants
     #
     def self.all connection
-      connection.database_names.map { |name| name.scan /^FF_#{connection.environment}_(?!default)(.*)$/ }.flatten.to_set
+      connection.database_names.map { |name| name.scan( /^FF_#{connection.environment}_(?!default)(.*)$/ ) }.flatten.to_set
     end
 
     def database
@@ -51,7 +51,8 @@ module Occupier
     #
     def self.connect! handle, environment = "development"
       connection = Occupier::MongoMapper::Connection.new environment
-      Occupier::Tenant.new(handle, connection).connect!
+      occupier   = Occupier::Tenant.new(handle, connection)
+      occupier.connect!
     end
 
     # Connects to specified tenant

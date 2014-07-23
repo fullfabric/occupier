@@ -79,11 +79,17 @@ module Occupier
       private
 
         def mongo_config
-          @mongo_config ||= YAML.load(ERB.new(File.read('config/mongo.yml')).result)
+
+          @@mongo_config ||= begin
+
+            mongo_config = File.read( 'config/mongo.yml' ) { |f| f.read }
+            template     = ERB.new( mongo_config ).result
+
+            YAML.load template
+
+          end
         end
 
     end
-
   end
-
 end
