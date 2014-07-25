@@ -1,6 +1,7 @@
 require File.expand_path("../../lib/occupier", __FILE__)
-require 'faker'
 
+require 'faker'
+require 'yaml'
 
 RSpec.configure do |config|
 
@@ -12,11 +13,11 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    
+
     @connection.database_names.select { |name| name =~ /^FF_test_*/ }.map do |database_name|
       @connection.drop_database database_name
     end
-    
+
   end
 
 

@@ -19,23 +19,23 @@ shared_examples_for "connection" do
     }
 
     described_class.any_instance.stub( :mongo_config ).and_return( config )
-    ::Mongo::ReplSetConnection.should_receive( :new ).once.and_return( :mock_class )
+    expect( Mongo::ReplSetConnection ).to receive( :new ).once.and_return( :mock_class )
 
     described_class.new :test
 
   end
 
   it "should make the environment available" do
-    connection.environment.should eq "test"
+    expect( connection.environment ).to eq "test"
   end
 
   it "should return the names of all the existing databases for this environment" do
 
     connection.drop_all
-    connection.database_names.should eq []
+    expect( connection.database_names ).to eq []
 
     connection.create(database_name)
-    connection.database_names.should eq [ database_name ]
+    expect( connection.database_names ).to eq [ database_name ]
 
   end
 
@@ -45,8 +45,8 @@ shared_examples_for "connection" do
 
       it "should create it" do
 
-        connection.create(database_name).should   be_a Mongo::DB
-        connection.database(database_name).should be_a Mongo::DB
+        expect( connection.create(database_name)   ).to be_a Mongo::DB
+        expect( connection.database(database_name) ).to be_a Mongo::DB
 
       end
 
@@ -59,8 +59,8 @@ shared_examples_for "connection" do
 
       it "should connect" do
         connection.create database_name
-        connection.connect(database_name).should be_true
-        connection.current_database.should eq database_name
+        expect( connection.connect( database_name ) ).to be_truthy
+        expect( connection.current_database ).to eq database_name
       end
 
     end
@@ -74,8 +74,7 @@ shared_examples_for "connection" do
       it "should return the database" do
 
         connection.create database_name
-
-        connection.database(database_name).should be_a Mongo::DB
+        expect( connection.database database_name ).to be_a Mongo::DB
 
       end
 
@@ -84,7 +83,7 @@ shared_examples_for "connection" do
     context "inexisting database" do
 
       it "should raise an error" do
-        -> { connection.database(database_name) }.should raise_error
+        expect{ connection.database database_name }.to raise_error
       end
 
     end

@@ -22,23 +22,20 @@ describe Occupier::Tenant do
 
     tenant = Occupier::Tenant.new(handle, connection)
 
-    tenant.exists?.should be_false
+    expect( tenant.exists? ).to be_falsey
     tenant.create!
 
-    tenant.exists?.should be_true
+    expect( tenant.exists? ).to be_truthy
 
   end
 
   context "a tenant" do
 
     it "returns its handle" do
-      Occupier::Tenant.new(handle, connection).handle.should eq handle
+      expect( Occupier::Tenant.new(handle, connection).handle ).to eq handle
     end
 
   end
-
-
-
 
   context "creating" do
 
@@ -47,7 +44,7 @@ describe Occupier::Tenant do
       it "creates it" do
 
         Occupier::Tenant.new(handle, connection).create!
-        Occupier::Tenant.all(connection).should include handle
+        expect( Occupier::Tenant.all(connection) ).to include handle
 
       end
 
