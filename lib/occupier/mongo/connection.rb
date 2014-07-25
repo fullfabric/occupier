@@ -5,8 +5,6 @@ module Occupier
     # @api public
     class Connection
 
-      @@connection = nil
-
       extend Forwardable
 
       attr_reader :environment, :current_database
@@ -34,6 +32,7 @@ module Occupier
           else
             ::Mongo::MongoClient.new( config[ 'host' ], config[ 'port' ], options )
           end
+
         end
 
       end
