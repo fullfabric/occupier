@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 require 'rubygems'
-require 'mongo_mapper'
 
 module Occupier
 
@@ -13,11 +12,7 @@ module Occupier
   autoload :InvalidTenantName,  'occupier/exceptions'
 
   module Mongo
-    autoload :Connection, 'occupier/mongo/connection'
+    autoload :Client, 'occupier/mongo/client'
   end
 
-  module MongoMapper
-    autoload :Connection, 'occupier/mongo_mapper/connection'
-  end
-  
 end

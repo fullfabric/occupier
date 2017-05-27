@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.add_dependency "mongo"
   s.add_dependency "bson"
   s.add_dependency "bson_ext"
-  s.add_dependency "mongo_mapper"
   s.add_dependency "mongo_ext"
 
   s.add_development_dependency "rspec"
