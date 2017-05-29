@@ -75,6 +75,7 @@ module Occupier
 
         def create!
           client["_dummy" ].create
+          client["_dummy" ].drop
         end
 
         def mongo_config

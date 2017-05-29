@@ -1,16 +1,22 @@
 # Occupier
 
-Handle connecting to different tenant databases in Mongo
+Connect to different tenant databases in Mongo.
+
+## Requirements
+
+MongoDB 3.0+
+
+## Usage
 
 Creating a new tenant
     
-    connection = Occupier::Mongo::Client.new :development
-    Occupier::Tenant.new("tbs", connection).create!
+    client = Occupier::Mongo::Client.new(:development)
+    Occupier::Tenant.new("tbs", client).create!
 
 Connecting to an existing tenant
     
-    connection = Occupier::Mongo::Client.new :development
-    Occupier::Tenant.new("tbs", connection).connect!
+    client = Occupier::Mongo::Client.new(:development)
+    Occupier::Tenant.new("tbs", client).connect!
 
 Connecting to an existing tenant using the short form
 
@@ -18,9 +24,17 @@ Connecting to an existing tenant using the short form
 
 Resetting a tenant
     
-    connection = Occupier::Mongo::Client.new :development
-    Occupier::Tenant.new("tbs", connection).reset!
+    client = Occupier::Mongo::Client.new(:development)
+    Occupier::Tenant.new("tbs", client).reset!
 
 Generate documentation for this project using YARD
+
+## Middleware
+
+Occupier provides two different middlewares, allowing your rack application to extract the tenant from either the host name or via the request
+
+### HostMiddleware
+
+### RequestMiddleware
     
     yardoc

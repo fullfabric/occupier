@@ -22,3 +22,7 @@ RSpec.configure do |config|
   end
 
 end
+
+RSpec::Matchers.define :tenant_defined_as do |name|
+  match { |env| env['tenant'] == name }
+end

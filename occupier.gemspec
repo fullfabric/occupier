@@ -3,7 +3,6 @@ $:.push File.expand_path("../lib", __FILE__)
 require 'version'
 
 Gem::Specification.new do |s|
-
   s.name        = "occupier"
   s.version     = Occupier::VERSION
   s.authors     = [ "Luis Correa d'Almeida" ]
@@ -16,10 +15,10 @@ Gem::Specification.new do |s|
   s.add_dependency "bson_ext"
   s.add_dependency "mongo_ext"
 
+  s.add_development_dependency "rack"
   s.add_development_dependency "rspec"
   s.add_development_dependency "faker"
 
   s.files        = Dir.glob("{lib}/**/*")
   s.require_path = 'lib'
-
 end
