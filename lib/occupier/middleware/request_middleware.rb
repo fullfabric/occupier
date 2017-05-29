@@ -15,7 +15,7 @@ class Occupier::RequestMiddleware
   private
 
     def extract_from_request(request)
-      request.get_header("FF-Tenant") ||
+      request.get_header("HTTP_TENANT") ||
         request.params['tenant'] ||
         request.cookies['tenant']
     end

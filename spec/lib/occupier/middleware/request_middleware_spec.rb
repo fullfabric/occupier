@@ -6,7 +6,7 @@ describe Occupier::RequestMiddleware do
   let (:env)    { { 'HTTP_HOST' => "abc.example.com", 'rack.url_scheme' => "https", "rack.input" => "", "PATH_INFO" => "/profiles/1" } }
 
   it "extracts tenant name from header" do
-    env.merge!({ "FF-Tenant" => tenant })
+    env.merge!({ "HTTP_TENANT" => tenant })
 
     expect(app).to receive(:call).with(tenant_defined_as(tenant))
     Occupier::RequestMiddleware.new(app).call(env)

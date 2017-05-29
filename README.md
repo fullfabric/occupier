@@ -36,5 +36,9 @@ Occupier provides two different middlewares, allowing your rack application to e
 ### HostMiddleware
 
 ### RequestMiddleware
+
+Pass tenant via the TENANT header.
+
+## Documentation    
     
     yardoc
