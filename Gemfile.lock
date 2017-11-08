@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    occupier (0.0.6)
+    occupier (0.0.7)
       bson
       bson_ext
       mongo
@@ -103,4 +103,4 @@ DEPENDENCIES
   spork (~> 1.0rc)
 
 BUNDLED WITH
-   1.15.4
+   1.16.0
