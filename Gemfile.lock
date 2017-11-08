@@ -1,12 +1,13 @@
 PATH
   remote: .
   specs:
-    occupier (0.0.7)
+    occupier (1.0.0)
       bson
       bson_ext
       mongo
       mongo_ext
       mongo_mapper (= 0.13.1)
+      pg
 
 GEM
   remote: https://rubygems.org/
@@ -63,6 +64,7 @@ GEM
       activesupport (>= 3.0)
       mongo (~> 1.8)
       plucky (~> 0.6.5)
+    pg (0.21.0)
     plucky (0.6.6)
       mongo (~> 1.5)
     pry (0.9.12.1)
