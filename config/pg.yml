@@ -1,0 +1,9 @@
+development:
+  # pool: 5
+  user: fullfabric
+  password: pa$$w0rd
+
+test:
+  # pool: 5
+  user: fullfabric
+  password: pa$$w0rd

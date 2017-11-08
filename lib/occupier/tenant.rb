@@ -3,15 +3,23 @@ module Occupier
   # @api public
   class Tenant
 
+    include Contracts::Core
+    include Contracts::Builtin
+
     attr_reader :handle
 
-    def initialize handle, connection
+    Contract String, Occupier::Mongo::Connection, Occupier::Pg::Connection => Occupier::Tenant
+    def initialize(handle, conn_mongo, conn_pg = nil)
 
       raise ::Occupier::InvalidTenantName.new(handle) unless handle =~ /^[a-z]+$/
 
-      @handle      = handle
-      @connection  = connection
-      @environment = connection.environment
+      @handle     = handle
+      @conn_mongo = conn_mongo
+      @conn_pg    = conn_pg
+
+      @environment = @conn_mongo.environment
+
+      self
 
     end
 
@@ -25,7 +33,7 @@ module Occupier
     end
 
     def database
-      @connection.database database_name
+      @conn_mongo.database database_name
     end
 
     def database_name
@@ -39,7 +47,8 @@ module Occupier
     #
     def create!
       ensure_tenant_does_not_exist!
-      @connection.create database_name
+      @conn_mongo.create(database_name)
+      (@conn_pg.create(database_name) if @conn_pg) rescue nil
       connect!
       self
     end
@@ -50,9 +59,10 @@ module Occupier
     # Occupier::Tenant
     #
     def self.connect! handle, environment = "development"
-      connection = Occupier::MongoMapper::Connection.new environment
-      occupier   = Occupier::Tenant.new(handle, connection)
-      occupier.connect!
+      conn_mongo = Occupier::MongoMapper::Connection.new(environment)
+      conn_pg = Occupier::Pg::Connection.new(environment)
+
+      Occupier::Tenant.new(handle, conn_mongo, conn_pg).connect!
     end
 
     # Connects to specified tenant
@@ -62,12 +72,18 @@ module Occupier
     #
     def connect!
       ensure_tenant_exists!
-      @connection.connect database_name
+      @conn_mongo.connect(database_name)
+      (@conn_pg.connect(database_name) if @conn_pg) rescue nil
       self
     end
 
+    def close
+      @conn_mongo.close
+      (@conn_pg.close if @conn_pg) rescue nil
+    end
+
     def reset!
-      @connection.drop_database database_name
+      @conn_mongo.drop_database database_name
       create!
     end
 
@@ -77,7 +93,7 @@ module Occupier
     end
 
     def exists?
-      @connection.database_names.include? database_name
+      @conn_mongo.database_names.include? database_name
     end
 
     private

@@ -6,19 +6,18 @@ require 'yaml'
 RSpec.configure do |config|
 
   config.before(:all) do
-
-    config      = YAML.load(ERB.new(File.read('config/mongo.yml')).result)[ "test" ]
-    @connection = Mongo::Connection.new(config['host'], config['port'])
-
+    @conn_mongo = Occupier::Mongo::Connection.new("test")
+    @conn_pg    = Occupier::Pg::Connection.new("test")
   end
 
   config.before(:each) do
-
-    @connection.database_names.select { |name| name =~ /^FF_test_*/ }.map do |database_name|
-      @connection.drop_database database_name
-    end
-
+    @conn_mongo.drop_all
+    @conn_pg.drop_all
   end
 
+  config.after(:all) do
+    @conn_mongo.close
+    @conn_pg.close
+  end
 
 end

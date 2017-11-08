@@ -15,8 +15,10 @@ Gem::Specification.new do |s|
   s.add_dependency "bson"
   s.add_dependency "bson_ext"
   s.add_dependency "mongo_mapper", '0.13.1'
+  s.add_dependency "activerecord", '3.2.22'
   s.add_dependency "mongo_ext"
   s.add_dependency "pg"
+  s.add_dependency "contracts"
 
   s.add_development_dependency "rspec"
   s.add_development_dependency "faker"

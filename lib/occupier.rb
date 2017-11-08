@@ -1,7 +1,12 @@
 # encoding: UTF-8
 
 require 'rubygems'
+require 'contracts'
 require 'mongo_mapper'
+
+require 'pg'
+require 'active_record'
+
 
 module Occupier
 
@@ -19,5 +24,9 @@ module Occupier
   module MongoMapper
     autoload :Connection, 'occupier/mongo_mapper/connection'
   end
-  
+
+  module Pg
+    autoload :Connection, 'occupier/pg/connection'
+  end
+
 end

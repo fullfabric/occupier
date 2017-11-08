@@ -8,7 +8,8 @@ group :test do
 
   gem 'guard-spork'
   gem 'guard-rspec', '~> 2.4.0'
-  
+  gem 'rb-fsevent', '~> 0.9.1'
+
 end
 
 group :development, :test do
