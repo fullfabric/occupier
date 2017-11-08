@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 shared_examples_for "connection" do
 
   let ( :database_name ) { "FF_test_#{Faker::Internet.domain_word}" }
