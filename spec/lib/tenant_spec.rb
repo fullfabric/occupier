@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Occupier::Tenant do
 
   let(:handle)     { Faker::Internet.domain_word }
