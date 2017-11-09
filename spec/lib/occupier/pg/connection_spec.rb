@@ -41,15 +41,16 @@ describe Occupier::Pg::Connection do
 
   context "connection to database" do
 
-    let!(:db) { connection.connection }
-
     it "gets a connection" do
-      expect(db).to be_a PG::Connection
+      connection.create(database_name)
+      connection.connect(database_name)
+      expect(connection.connection).to be_a PG::Connection
     end
 
     it "closes connection" do
+      connection.connect
       connection.close
-      expect(db.finished?).to be true
+      expect(connection.connection.finished?).to be true
     end
 
     it "connects to a database" do

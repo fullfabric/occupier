@@ -14,7 +14,6 @@ module Occupier
 
       def initialize environment = "development", logger = nil
         @environment = environment.to_s
-        connect
       end
 
       def create database_name
@@ -33,6 +32,9 @@ module Occupier
       def connect database_name = 'postgres'
         @connection = ::PG::Connection.new(config_file[@environment].merge({ dbname: database_name.downcase }))
         ::ActiveRecord::Base.establish_connection(config_file[@environment].merge({ adapter: "postgresql", database: database_name.downcase }))
+      rescue PG::ConnectionBad => e
+        # what do we do here?
+      ensure
         true
       end
 
