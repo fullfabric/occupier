@@ -13,9 +13,7 @@ RSpec.configure do |config|
   config.before(:each) do
     @conn_mongo.drop_all
     @conn_pg.drop_all
-  end
 
-  config.after(:all) do
     @conn_mongo.close
     @conn_pg.close
   end
