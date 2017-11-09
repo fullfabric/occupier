@@ -88,8 +88,20 @@ describe Occupier::Tenant do
         expect(Occupier::Tenant.new(handle, connection_mongo).connect!).to be_a Occupier::Tenant
       end
 
-      it "connects using the short form" do
-        expect(Occupier::Tenant.connect!(tenant.handle, :test)).to be_a Occupier::Tenant
+      context "short form" do
+
+        it "connects using the short form" do
+          expect(Occupier::Tenant.connect!(tenant.handle, :test)).to be_a Occupier::Tenant
+        end
+
+        it "does not connect to postgres" do
+          expect(Occupier::Tenant).to receive(:new).with { |arg1, arg2, arg3|
+            expect(arg1).to eq tenant.handle
+            expect(arg3).to be_nil
+          } { double(Occupier::Tenant, connect!: true ) }
+          Occupier::Tenant.connect!(tenant.handle, :test)
+        end
+
       end
 
       context "inexistent postgres database" do

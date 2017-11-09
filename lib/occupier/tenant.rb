@@ -60,9 +60,7 @@ module Occupier
     #
     def self.connect! handle, environment = "development"
       conn_mongo = Occupier::MongoMapper::Connection.new(environment)
-      conn_pg = Occupier::Pg::Connection.new(environment)
-
-      Occupier::Tenant.new(handle, conn_mongo, conn_pg).connect!
+      Occupier::Tenant.new(handle, conn_mongo).connect!
     end
 
     # Connects to specified tenant
