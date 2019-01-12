@@ -49,8 +49,8 @@ module Occupier
     # == Returns:
     # Occupier::Tenant
     #
-    def self.connect! handle, environment = "development"
-      connection = Occupier::MongoMapper::Connection.new environment
+    def self.connect!(handle, environment = "development", logger = nil)
+      connection = Occupier::MongoMapper::Connection.new(environment, logger)
       occupier   = Occupier::Tenant.new(handle, connection)
       occupier.connect!
     end

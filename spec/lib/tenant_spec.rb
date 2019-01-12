@@ -83,8 +83,12 @@ describe Occupier::Tenant do
         Occupier::Tenant.new(tenant.handle, connection).connect!.should be_a Occupier::Tenant
       end
 
-      it "connects using the short form" do
-        Occupier::Tenant.connect!(tenant.handle, :test).should be_a Occupier::Tenant
+      context "short form" do
+
+        it "connects using the short form" do
+          Occupier::Tenant.connect!(tenant.handle, :test).should be_a Occupier::Tenant
+        end
+
       end
 
     end

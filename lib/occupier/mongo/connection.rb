@@ -14,6 +14,7 @@ module Occupier
 
       def initialize environment = "development", logger = nil
         @environment = environment.to_s
+        @logger = logger
         connection
       end
 
@@ -23,7 +24,7 @@ module Occupier
 
           config = mongo_config[ @environment ]
 
-          options          = { logger: nil }
+          options          = { logger: @logger }
           options[ :w ]    = config[ 'write' ].try( :to_i )  || 1
           options[ :read ] = config[ 'read' ].try( :to_sym ) || :primary
 
