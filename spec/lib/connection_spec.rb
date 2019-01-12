@@ -37,6 +37,12 @@ shared_examples_for "connection" do
 
   end
 
+  it "passes logger to client" do
+    logger = double(Object, { debug: true })
+    connection = described_class.new(:test, logger)
+    expect(connection.connection.logger).to eq(logger)
+  end
+
   context "creating" do
 
     context "inexistent database" do
