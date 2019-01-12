@@ -19,5 +19,7 @@ module Occupier
   module MongoMapper
     autoload :Connection, 'occupier/mongo_mapper/connection'
   end
-  
+
 end
+
+require 'occupier/railtie' if defined?(Rails)
