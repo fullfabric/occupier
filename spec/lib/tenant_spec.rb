@@ -27,6 +27,28 @@ describe Occupier::Tenant do
 
   end
 
+  context "all tenants" do
+
+    before do
+      Occupier::Tenant.new("one", connection).create!
+      Occupier::Tenant.new("two", connection).create!
+      Occupier::Tenant.new("three", connection).create!
+    end
+
+    it "returns all tenants" do
+      expect(Occupier::Tenant.all(connection)).to eq ["one", "two", "three"].to_set
+    end
+
+    it "ignores default and common databases" do
+      Occupier::Tenant.new("default", connection).create!
+      Occupier::Tenant.new("common", connection).create!
+      Occupier::Tenant.new("four", connection).create!
+
+      expect(Occupier::Tenant.all(connection)).to eq ["one", "two", "three", "four"].to_set
+    end
+
+  end
+
   context "a tenant" do
 
     it "returns its handle" do
