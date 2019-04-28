@@ -21,7 +21,8 @@ module Occupier
     # An array with all the tenants
     #
     def self.all connection
-      connection.database_names.map { |name| name.scan( /^FF_#{connection.environment}_(?!default)(.*)$/ ) }.flatten.to_set
+      databases_to_ignore = ["default", "common"]
+      connection.database_names.map { |name| name.scan( /^FF_#{connection.environment}_(?!#{databases_to_ignore.join("|")})(.*)$/ ) }.flatten.to_set
     end
 
     def database
