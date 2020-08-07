@@ -1,11 +1,10 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 gemspec
 
 group :test do
-  gem 'rspec'
-  gem 'guard-rspec'
+  gem "guard-rspec"
 end
 
 group :development, :test do
-  gem 'pry-byebug'
+  gem "byebug"
 end

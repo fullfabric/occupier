@@ -53,10 +53,15 @@ module Occupier
         connection.close
       end
 
-      def database database_name
+      def database(database_name)
+        connection[database_name]
+      end
+
+      def database!(database_name)
         raise "database does not exist" unless database_exists? database_name
         connection[ database_name ]
       end
+
 
       def reset database_name
         drop_database database_name

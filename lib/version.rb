@@ -1,3 +1,3 @@
 module Occupier
-  VERSION = "0.0.11"
+  VERSION = "2.0.0"
 end

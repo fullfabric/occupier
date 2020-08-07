@@ -26,7 +26,7 @@ module Occupier
     end
 
     def database
-      @connection.database database_name
+      @connection.database!(database_name)
     end
 
     def database_name
