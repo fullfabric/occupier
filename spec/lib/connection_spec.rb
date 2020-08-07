@@ -86,8 +86,12 @@ shared_examples_for "connection" do
 
     context "inexisting database" do
 
-      it "should raise an error" do
-        expect{ connection.database database_name }.to raise_error
+      it "raises an error" do
+        expect{ connection.database!(database_name) }.to raise_error
+      end
+
+      it "forces database creation" do
+        expect(connection.database(database_name)).to be_a(Mongo::DB)
       end
 
     end
