@@ -4,27 +4,23 @@ describe Occupier::Tenant do
   let(:connection) { Occupier::MongoMapper::Connection.new :test }
 
   it "returns a list of handles for all existing tenants" do
-
     handle_1 = Faker::Internet.domain_word
     handle_2 = Faker::Internet.domain_word
 
     Occupier::Tenant.new(handle_1, connection).create!
     Occupier::Tenant.new(handle_2, connection).create!
 
-    Occupier::Tenant.all(connection).should include handle_1
-    Occupier::Tenant.all(connection).should include handle_2
-
+    expect(Occupier::Tenant.all(connection)).to include handle_1
+    expect(Occupier::Tenant.all(connection)).to include handle_2
   end
 
   it "knows whether a tenant exists" do
-
     tenant = Occupier::Tenant.new(handle, connection)
 
-    expect( tenant.exists? ).to be_falsey
+    expect(tenant.exists?).to be false
     tenant.create!
 
-    expect( tenant.exists? ).to be_truthy
-
+    expect(tenant.exists?).to be true
   end
 
   context "all tenants" do
@@ -62,16 +58,14 @@ describe Occupier::Tenant do
     context "an inexistent tenant" do
 
       it "creates it" do
-
         Occupier::Tenant.new(handle, connection).create!
-        expect( Occupier::Tenant.all(connection) ).to include handle
-
+        expect(Occupier::Tenant.all(connection)).to include handle
       end
 
       it "only creates it if name contains only [a-z]" do
 
         [ "tbs", "thelisbonmba", "cbs", "enpc", "esmt"].each do |handle|
-          Occupier::Tenant.new(handle, connection).should be_a Occupier::Tenant
+          expect(Occupier::Tenant.new(handle, connection)).to be_a Occupier::Tenant
         end
 
         [ "TBS", "the-school", "a b c", "tbs!", "go go go"].each do |handle|
@@ -85,10 +79,8 @@ describe Occupier::Tenant do
     context "an existing tenant" do
 
       it "does not create it" do
-
-        Occupier::Tenant.new(handle, connection).create!.database.should be_a Mongo::DB
-        expect { Occupier::Tenant.new(handle, connection).create! }.to raise_error
-
+        expect(Occupier::Tenant.new(handle, connection).create!.database).to be_a Mongo::DB
+        expect { Occupier::Tenant.new(handle, connection).create! }.to raise_error(Occupier::AlreadyExists)
       end
 
     end
@@ -102,13 +94,13 @@ describe Occupier::Tenant do
       let(:tenant) { Occupier::Tenant.new(handle, connection).create! }
 
       it "connects" do
-        Occupier::Tenant.new(tenant.handle, connection).connect!.should be_a Occupier::Tenant
+        expect(Occupier::Tenant.new(tenant.handle, connection).connect!).to be_a Occupier::Tenant
       end
 
       context "short form" do
 
         it "connects using the short form" do
-          Occupier::Tenant.connect!(tenant.handle, :test).should be_a Occupier::Tenant
+          expect(Occupier::Tenant.connect!(tenant.handle, :test)).to be_a Occupier::Tenant
         end
 
       end
@@ -130,7 +122,7 @@ describe Occupier::Tenant do
     context "a database for a non-inexistent tenant" do
 
       it "raises an error" do
-        expect { Occupier::Tenant.new(handle, connection).database }.to raise_error
+        expect { Occupier::Tenant.new(handle, connection).database }.to raise_error(RuntimeError)
       end
 
     end
@@ -147,10 +139,9 @@ describe Occupier::Tenant do
 
         tenant.create!
         tenant.database['some_collection'].insert({ value: 1 })
-        tenant.database['some_collection'].count.should eq 1
+        expect(tenant.database['some_collection'].count).to eq 1
 
-        tenant.purge!.database['some_collection'].count.should eq 0
-
+        expect(tenant.purge!.database['some_collection'].count).to eq 0
       end
 
     end
@@ -167,10 +158,9 @@ describe Occupier::Tenant do
 
         tenant.create!
         tenant.database['some_collection'].insert({ value: 1 })
-        tenant.database['some_collection'].count.should eq 1
+        expect(tenant.database['some_collection'].count).to eq 1
 
-        tenant.reset!.database['some_collection'].count.should eq 0
-
+        expect(tenant.reset!.database['some_collection'].count).to eq 0
       end
 
     end
