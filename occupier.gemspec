@@ -11,6 +11,8 @@ Gem::Specification.new do |s|
   s.summary     = "Occupier"
   s.description = "The Occupier gem provides support for multi-tenancy on mongodb"
 
+  s.required_ruby_version = ">= 2.6"
+
   s.add_dependency "mongo", "~> 1"
   s.add_dependency "bson", "~> 1"
   s.add_dependency "bson_ext", "~> 1"
@@ -19,6 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "faker", "2.2.1"
   s.add_development_dependency "rb-fsevent"
+  s.add_development_dependency "awesome_print"
 
   s.files        = Dir.glob("{lib}/**/*")
   s.require_path = 'lib'
