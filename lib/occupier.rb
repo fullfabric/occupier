@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'mongo_mapper'
+require 'pg'
 
 module Occupier
 
@@ -18,6 +19,10 @@ module Occupier
 
   module MongoMapper
     autoload :Connection, 'occupier/mongo_mapper/connection'
+  end
+
+  module Pg
+    autoload :Connection, "occupier/pg/connection"
   end
 
 end

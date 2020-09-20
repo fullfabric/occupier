@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency "bson_ext", "~> 1"
   s.add_dependency "mongo_mapper", ">= 0.13.1"
   s.add_dependency "mongo_ext"
+  s.add_dependency "pg"
 
   s.add_development_dependency "faker", "2.2.1"
   s.add_development_dependency "rb-fsevent"
