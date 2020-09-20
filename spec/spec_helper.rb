@@ -2,7 +2,7 @@ require File.expand_path("../../lib/occupier", __FILE__)
 
 require "faker"
 require "yaml"
-require "byebug"
+require "pry-byebug"
 
 RSpec.configure do |config|
 
