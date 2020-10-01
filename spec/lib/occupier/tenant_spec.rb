@@ -62,13 +62,25 @@ describe Occupier::Tenant do
         expect(Occupier::Tenant.all(connection)).to include handle
       end
 
-      it "only creates it if name contains only [a-z]" do
+      it "only creates it if name contains only [a-z\-]" do
 
-        [ "tbs", "thelisbonmba", "cbs", "enpc", "esmt"].each do |handle|
+        [ "tbs", "thelisbonmba", "cbs", "enpc", "esmt", "the-school", "i2i", "abc123", "this-1s-valid"].each do |handle|
           expect(Occupier::Tenant.new(handle, connection)).to be_a Occupier::Tenant
         end
 
-        [ "TBS", "the-school", "a b c", "tbs!", "go go go"].each do |handle|
+        [ "TBS", "a b c", "tbs!", "go go go", "ab*c", "the_school", "-no-good", "2-go", "a", "ab"].each do |handle|
+          expect { Occupier::Tenant.new(handle,   connection) }.to raise_error(Occupier::InvalidTenantName)
+        end
+
+      end
+
+      it "is at least 3 characters long" do
+
+        [ "abc", "abcd" ].each do |handle|
+          expect(Occupier::Tenant.new(handle, connection)).to be_a Occupier::Tenant
+        end
+
+        ["a", "ab"].each do |handle|
           expect { Occupier::Tenant.new(handle,   connection) }.to raise_error(Occupier::InvalidTenantName)
         end
 

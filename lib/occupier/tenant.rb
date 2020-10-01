@@ -7,7 +7,7 @@ module Occupier
 
     def initialize handle, connection
 
-      raise ::Occupier::InvalidTenantName.new(handle) unless handle =~ /^[a-z]+$/
+      raise ::Occupier::InvalidTenantName.new(handle) unless handle =~ /^[a-z]+[0-9a-z\-]*$/ && handle.size > 2
 
       @handle      = handle
       @connection  = connection
