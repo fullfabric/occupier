@@ -5,9 +5,9 @@ module Occupier
 
     attr_reader :handle
 
-    def initialize handle, connection
+    def initialize(handle, connection)
 
-      raise ::Occupier::InvalidTenantName.new(handle) unless handle =~ /^[a-z]+[0-9a-z\-]*$/ && handle.size > 2
+      raise ::Occupier::InvalidTenantName.new(handle) unless handle =~ /^[a-z]+[0-9a-z\-]*[0-9a-z]+$/ && handle.size > 2
 
       @handle      = handle
       @connection  = connection

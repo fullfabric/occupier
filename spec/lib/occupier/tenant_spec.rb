@@ -62,6 +62,18 @@ describe Occupier::Tenant do
         expect(Occupier::Tenant.all(connection)).to include handle
       end
 
+      it "can't start with a hyphen" do
+        expect { Occupier::Tenant.new("-start", connection) }.to raise_error(Occupier::InvalidTenantName)
+      end
+
+      it "can't end with a hyphen" do
+        expect { Occupier::Tenant.new("end-", connection) }.to raise_error(Occupier::InvalidTenantName)
+      end
+
+      it "can't start with a number" do
+        expect { Occupier::Tenant.new("2go", connection) }.to raise_error(Occupier::InvalidTenantName)
+      end
+
       it "only creates it if name contains only [a-z\-]" do
 
         [ "tbs", "thelisbonmba", "cbs", "enpc", "esmt", "the-school", "i2i", "abc123", "this-1s-valid"].each do |handle|
