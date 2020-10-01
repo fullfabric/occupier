@@ -5,14 +5,17 @@ module Occupier
 
     attr_reader :handle
 
-    def initialize handle, connection
-
-      raise ::Occupier::InvalidTenantName.new(handle) unless handle =~ /^[a-z]+$/
+    def initialize(handle, connection)
+      raise ::Occupier::InvalidTenantName.new(handle) unless Tenant.is_valid?(handle)
 
       @handle      = handle
       @connection  = connection
       @environment = connection.environment
 
+    end
+
+    def self.is_valid?(handle)
+      handle =~ /^[a-z]+[0-9a-z\-]*[0-9a-z]+$/ && handle.size > 2
     end
 
     # Returns the names of all existing tenants for the current connection environment
