@@ -15,7 +15,7 @@ module Occupier
     end
 
     def self.is_valid?(handle)
-      handle =~ /^[a-z]+[0-9a-z\-]*[0-9a-z]+$/ && handle.size > 2
+      handle =~ /^[a-z]+[0-9a-z\-]*[0-9a-z]+$/ && handle.size >= 2
     end
 
     # Returns the names of all existing tenants for the current connection environment

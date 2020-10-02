@@ -76,24 +76,24 @@ describe Occupier::Tenant do
 
       it "only creates it if name contains only [a-z\-]" do
 
-        [ "tbs", "thelisbonmba", "cbs", "enpc", "esmt", "the-school", "i2i", "abc123", "this-1s-valid"].each do |handle|
+        [ "xy", "tbs", "thelisbonmba", "cbs", "enpc", "esmt", "the-school", "i2i", "abc123", "this-1s-valid"].each do |handle|
           expect(Occupier::Tenant.new(handle, connection)).to be_a Occupier::Tenant
         end
 
-        [ "TBS", "a b c", "tbs!", "go go go", "ab*c", "the_school", "-no-good", "2-go", "a", "ab"].each do |handle|
+        [ "TBS", "a b c", "tbs!", "go go go", "ab*c", "the_school", "-no-good", "2-go", "a"].each do |handle|
           expect { Occupier::Tenant.new(handle,   connection) }.to raise_error(Occupier::InvalidTenantName)
         end
 
       end
 
-      it "is at least 3 characters long" do
+      it "is at least 2 characters long" do
 
-        [ "abc", "abcd" ].each do |handle|
+        [ "ab", "abc", "abcd" ].each do |handle|
           expect(Occupier::Tenant.new(handle, connection)).to be_a Occupier::Tenant
         end
 
-        ["a", "ab"].each do |handle|
-          expect { Occupier::Tenant.new(handle,   connection) }.to raise_error(Occupier::InvalidTenantName)
+        ["a", "b"].each do |handle|
+          expect { Occupier::Tenant.new(handle, connection) }.to raise_error(Occupier::InvalidTenantName)
         end
 
       end
