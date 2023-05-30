@@ -74,7 +74,8 @@ module Occupier
       end
 
       def database_names
-        connection.database_names.select { |name| name =~ /^FF_#{@environment}_/ }
+        doc = connection["admin"].command({ listDatabases: 1, nameOnly: true })
+        doc["databases"].map { |h| h["name"] }.select { |name| name =~ /^FF_#{@environment}_/ }
       end
 
       def drop_all

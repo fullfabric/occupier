@@ -31,6 +31,17 @@ shared_examples_for "connection" do
     expect( connection.database_names ).to eq []
 
     connection.create(database_name)
+    connection.create("FF_development_otherdb")
+
+    expect( connection.database_names ).to eq [ database_name ]
+  end
+
+  it "calls listDatabases with nameOnly: true" do
+    mock_database = double(Mongo::DB)
+
+    allow(connection.connection).to receive(:[]).with("admin") { mock_database }
+    expect(mock_database).to receive(:command).with({ listDatabases: 1, nameOnly: true }) { { "databases" => [{ "name" => database_name }] } }
+
     expect( connection.database_names ).to eq [ database_name ]
   end
 
