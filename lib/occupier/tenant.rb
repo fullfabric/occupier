@@ -5,31 +5,33 @@ module Occupier
 
     attr_reader :handle
 
-    def initialize(handle, connection)
+    def initialize(handle, client)
       raise ::Occupier::InvalidTenantName.new(handle) unless Tenant.is_valid?(handle)
 
-      @handle      = handle
-      @connection  = connection
-      @environment = connection.environment
-
+      @handle  = handle
+      @client  = client
+      @environment = client.environment
     end
 
     def self.is_valid?(handle)
       handle =~ /^[a-z]+[0-9a-z\-]*[0-9a-z]+$/ && handle.size >= 2
     end
 
-    # Returns the names of all existing tenants for the current connection environment
+    # Returns the names of all existing tenants for the current client environment
     #
     # == Returns:
     # An array with all the tenants
     #
-    def self.all connection
+    def self.all client
       databases_to_ignore = ["default", "common"]
-      connection.database_names.map { |name| name.scan( /^FF_#{connection.environment}_(?!#{databases_to_ignore.join("|")})(.*)$/ ) }.flatten.to_set
+
+      client.database_names.map do |name|
+        name.scan(/^FF_#{client.environment}_(?!#{databases_to_ignore.join("|")})(.*)$/ )
+      end.flatten.to_set
     end
 
     def database
-      @connection.database!(database_name)
+      @client.database!(database_name)
     end
 
     def database_name
@@ -43,7 +45,7 @@ module Occupier
     #
     def create!
       ensure_tenant_does_not_exist!
-      @connection.create database_name
+      @client.create database_name
       connect!
       self
     end
@@ -54,8 +56,8 @@ module Occupier
     # Occupier::Tenant
     #
     def self.connect!(handle, environment = "development", logger = nil)
-      connection = Occupier::MongoMapper::Connection.new(environment, logger)
-      occupier   = Occupier::Tenant.new(handle, connection)
+      client = Occupier::MongoMapper::Connection.new(environment, logger)
+      occupier = Occupier::Tenant.new(handle, client)
       occupier.connect!
     end
 
@@ -66,22 +68,22 @@ module Occupier
     #
     def connect!
       ensure_tenant_exists!
-      @connection.connect database_name
+      @client.connect database_name
       self
     end
 
     def reset!
-      @connection.drop_database database_name
+      @client.drop_database database_name
       create!
     end
 
     def purge!
-      database.collections.select{ |collection| ( collection.name =~ /^system/ ).nil? }.each( &:remove )
+      database.collections.select{ |collection| ( collection.name =~ /^system/ ).nil? }.each { |col| col.delete_many }
       self
     end
 
     def exists?
-      @connection.database_names.include? database_name
+      @client.database_names.include? database_name
     end
 
     private
