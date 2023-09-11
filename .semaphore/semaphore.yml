@@ -1,0 +1,27 @@
+version: v1.0
+name: Test occupier
+agent:
+  machine:
+    type: e2-standard-2
+    os_image: ubuntu2004
+
+global_job_config:
+  prologue:
+    commands:
+    - checkout
+    - cache restore
+    - sem-version ruby 2.7.7
+    - bundle
+    - docker run -d --name mongodb --net=host --rm -v /home/semaphore/occupier/.semaphore/mongod.conf:/etc/mongod.conf registry.semaphoreci.com/mongo:3.2 --config /etc/mongod.conf
+  epilogue:
+    commands:
+    - cache store
+
+blocks:
+- name: RSpec
+  dependencies: []
+  task:
+    jobs:
+    - name: RSpec tests
+      commands:
+      - bundle exec rspec spec
