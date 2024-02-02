@@ -65,17 +65,12 @@ module Occupier
       end
 
       def database_names
-        # TODO: test changing this to `client.database_names`
-
         # XXX: this is filtering by the DB prefix, but we're not actually
         # enforcing the prefix on database creation. There's no guarantee that
         # all the databases that are created via the client will be returned
         # here.
 
-        result = db_client("admin").database.command({ listDatabases: 1, nameOnly: true })
-        result.documents.first["databases"]
-          .map { |h| h["name"] }
-          .select { |name| name =~ /^FF_#{@environment}_/ }
+        client.database_names.select { |name| name =~ /^FF_#{@environment}_/ }
       end
 
       def drop_database database_name

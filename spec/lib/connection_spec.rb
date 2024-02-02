@@ -40,8 +40,8 @@ shared_examples_for "client" do
 
     allow(client.client).to receive(:use).with("admin") { mock_admin_client }
     allow(mock_admin_client).to receive(:database) { mock_database }
-    allow(mock_result).to receive(:documents) { [{ "databases" => [{ "name" => database_name }] }] }
-    expect(mock_database).to receive(:command).with({ listDatabases: 1, nameOnly: true }) { mock_result }
+    allow(mock_result).to receive(:first) { { "databases" => [{ "name" => database_name }] } }
+    expect(mock_database).to receive(:read_command).with({ listDatabases: 1, nameOnly: true }, {}) { mock_result }
 
     expect(client.database_names).to eq [database_name]
   end
