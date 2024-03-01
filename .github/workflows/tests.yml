@@ -1,0 +1,36 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+
+    outputs:
+      status: ${{ steps.set-status.outputs.status }}
+
+    strategy:
+      matrix:
+        ruby-version: [2.7.8]
+        mongodb-version: ["3.2", "4.2"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+
+      - name: Run tests
+        run: bundle exec rspec spec
+
+      - name: Output status
+        id: set-status
+        run: echo "status=${{ job.status }}" >> $GITHUB_OUTPUT

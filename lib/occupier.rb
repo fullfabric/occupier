@@ -13,7 +13,7 @@ module Occupier
   autoload :InvalidTenantName,  'occupier/exceptions'
 
   module Mongo
-    autoload :Connection, 'occupier/mongo/connection'
+    autoload :Client, 'occupier/mongo/client'
   end
 
   module MongoMapper
