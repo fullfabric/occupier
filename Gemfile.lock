@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    occupier (3.0.0)
+    occupier (3.1.0)
       bson (~> 4.15.0)
       bson_ext
       mongo (~> 2.16.0)
