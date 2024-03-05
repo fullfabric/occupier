@@ -19,17 +19,16 @@ module Occupier
 
       def client
         @client ||= begin
-
           config = mongo_config[@environment]
 
           options         =  { logger: @logger }
           options[:write] =  { w: config['write'].try(:to_i) || 1 }
           options[:read]  =  { mode: config['read'].try(:to_sym) || :primary }
+          options[:database] = config['database'] if config['database']
 
           addresses = config['hosts'] || ["#{config['host']}:#{config['port']}"]
 
           ::Mongo::Client.new(addresses, options)
-
         end
       end
 
