@@ -1,0 +1,15 @@
+defaults: &defaults
+  adapter: postgresql
+  encoding: unicode
+  port: 5432
+
+development:
+  <<: *defaults
+  database: fullfabric_development
+  host: localhost
+  username: postgres
+  password:
+
+test:
+  <<: *defaults
+  database: fullfabric_test

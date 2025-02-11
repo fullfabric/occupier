@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'mongo_mapper'
+require 'active_record'
 
 module Occupier
 
@@ -20,6 +21,9 @@ module Occupier
     autoload :Connection, 'occupier/mongo_mapper/connection'
   end
 
+  module Postgres
+    autoload :Client, 'occupier/postgres/client'
+  end
 end
 
 require 'occupier/railtie' if defined?(Rails)

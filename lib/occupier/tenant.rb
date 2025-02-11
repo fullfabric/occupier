@@ -5,11 +5,12 @@ module Occupier
 
     attr_reader :handle
 
-    def initialize(handle, client)
+    def initialize(handle, client, pg_client)
       raise ::Occupier::InvalidTenantName.new(handle) unless Tenant.is_valid?(handle)
 
       @handle  = handle
       @client  = client
+      @pg_client = pg_client
       @environment = client.environment
     end
 
@@ -45,7 +46,8 @@ module Occupier
     #
     def create!
       ensure_tenant_does_not_exist!
-      @client.create database_name
+      @client.create(database_name)
+      @pg_client.create(database_name)
       connect!
       self
     end
@@ -57,28 +59,34 @@ module Occupier
     #
     def self.connect!(handle, environment = "development", logger = nil)
       client = Occupier::MongoMapper::Connection.new(environment, logger)
-      occupier = Occupier::Tenant.new(handle, client)
+      pg_client = Occupier::Postgres::Client.new(environment, nil)
+      occupier = Occupier::Tenant.new(handle, client, pg_client)
       occupier.connect!
     end
 
     # Connects to specified tenant
+    # to improve performance, the connection is done in parallel
     #
     # == Returns:
     # Self
     #
     def connect!
       ensure_tenant_exists!
-      @client.connect database_name
+      [
+        Thread.new { @client.connect(database_name) },
+        Thread.new { @pg_client.connect(database_name) }
+      ].each(&:join)
       self
     end
 
     def reset!
       @client.drop_database database_name
+      @pg_client.drop_database database_name
       create!
     end
 
     def purge!
-      database.collections.select{ |collection| ( collection.name =~ /^system/ ).nil? }.each { |col| col.delete_many }
+      database.collections.select { |collection| ( collection.name =~ /^system/ ).nil? }.each { |col| col.delete_many }
       self
     end
 
