@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    occupier (3.1.0)
+    occupier (4.0.0)
       activerecord (~> 6.0)
       bson (~> 4.15.0)
       bson_ext

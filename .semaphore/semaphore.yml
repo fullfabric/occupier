@@ -12,6 +12,8 @@ global_job_config:
     - cache restore
     - sem-version ruby 2.7.7
     - bundle
+    - sem-service start postgres 17.2
+    - createdb -U postgres fullfabric_test # Create the test database, on the start didn't work
     - docker run -d --name mongodb --net=host --rm -v /home/semaphore/occupier/.semaphore/mongod.conf:/etc/mongod.conf registry.semaphoreci.com/mongo:3.2 --config /etc/mongod.conf
   epilogue:
     commands:
