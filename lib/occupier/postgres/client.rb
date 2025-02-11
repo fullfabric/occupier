@@ -13,6 +13,8 @@ module Occupier
       def initialize(environment = 'development', logger = nil)
         @environment = environment.to_s
         @logger = logger
+
+        initial_connection
       end
 
       def create(database_name)
@@ -57,17 +59,18 @@ module Occupier
 
       private
 
+      def initial_connection
+        ActiveRecord::Base.establish_connection(db_config)
+      end
+
       # Connects to the database
       # when no database name is provided uses the database from the configuration
       def connect_to(database_name)
-        config = db_config.dup
-        config[:database] = database_name if database_name
-
         # Do not reconnect if the connection is already established
         return if ActiveRecord::Base.connection.active? &&
-                  ActiveRecord::Base.connection.current_database == config[:database]
+                  ActiveRecord::Base.connection.current_database == database_name
 
-        ActiveRecord::Base.establish_connection(config)
+        ActiveRecord::Base.connection.change_database!(database_name)
       end
 
       def db_config

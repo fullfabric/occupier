@@ -38,7 +38,7 @@ RSpec.describe Occupier::Postgres::Client do
     end
 
     it 'raises an error if connection fails' do
-      allow(ActiveRecord::Base).to receive(:establish_connection).and_raise(StandardError.new('error'))
+      allow(ActiveRecord::Base.connection).to receive(:change_database!).and_raise(StandardError.new('error'))
 
       expect do
         client.connect('random_db')
@@ -47,14 +47,14 @@ RSpec.describe Occupier::Postgres::Client do
 
     describe 'performance' do
       describe 'when the database is the same as the connected one' do
-        it 'connection is under 2ms for the same db' do
+        it 'connection is under 1ms for the same db' do
           client.connect(database_name) # warm up
 
           avg = Benchmark.ms do
             2.times { client.connect(database_name) }
           end / 2
           # normally it should be under 1ms, but we are adding some margin
-          expect(avg).to be < 2
+          expect(avg).to be < 1
         end
       end
 
@@ -63,12 +63,12 @@ RSpec.describe Occupier::Postgres::Client do
           1..2.times { |i| client.create("#{database_name}#{i}") }
         end
 
-        it 'connection is under 30ms for the same db' do
+        it 'connection is under 5ms for a different db' do
           avg = Benchmark.ms do
             2.times { |i| client.connect("#{database_name}#{i}") }
           end / 2
-          # normally it should be under 20ms, but we are adding some margin
-          expect(avg).to be < 30
+          # normally it should be under 5ms, but we are adding some margin
+          expect(avg).to be < 10
         end
       end
     end
