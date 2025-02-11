@@ -1,0 +1,16 @@
+defaults: &defaults
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  username: postgres
+  password:
+  port: 5432
+
+development:
+  <<: *defaults
+  database: fullfabric_development
+
+test:
+  <<: *defaults
+  password: <%= ENV['POSTGRES_PASSWORD'] || '' %>
+  database: fullfabric_test

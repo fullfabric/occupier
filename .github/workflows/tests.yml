@@ -23,13 +23,18 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
+      - uses: ikalnytskyi/action-setup-postgres@v7
+        with:
+          database: fullfabric_test
+          password: postgres
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@1.8.0
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
-
       - name: Run tests
         run: bundle exec rspec spec
+        env:
+          POSTGRES_PASSWORD: postgres
 
       - name: Output status
         id: set-status
