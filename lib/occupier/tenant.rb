@@ -5,7 +5,7 @@ module Occupier
 
     attr_reader :handle
 
-    def initialize(handle, client, pg_client)
+    def initialize(handle, client, pg_client = Occupier::Postgres::Client.new(client.environment))
       raise ::Occupier::InvalidTenantName.new(handle) unless Tenant.is_valid?(handle)
 
       @handle  = handle

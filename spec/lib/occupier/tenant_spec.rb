@@ -3,6 +3,15 @@ describe Occupier::Tenant do
   let(:client) { Occupier::MongoMapper::Connection.new :test }
   let(:pg_client) { Occupier::Postgres::Client.new :test }
 
+  describe 'initialization' do
+    describe 'when no pg client' do
+      it 'creates the pg client' do
+        tenant = Occupier::Tenant.new(handle, client)
+        expect(tenant.instance_variable_get(:@pg_client)).to be_a Occupier::Postgres::Client
+      end
+    end
+  end
+
   it 'returns a list of handles for all existing tenants' do
     handle_1 = Faker::Internet.domain_word
     handle_2 = Faker::Internet.domain_word
