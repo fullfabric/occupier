@@ -58,9 +58,9 @@ module Occupier
     # Occupier::Tenant
     #
     def self.connect!(handle, environment = "development", logger = nil)
-      client = Occupier::MongoMapper::Connection.new(environment, logger)
+      mongo_client = Occupier::MongoMapper::Connection.new(environment, logger)
       pg_client = Occupier::Postgres::Client.new(environment, nil)
-      occupier = Occupier::Tenant.new(handle, client, pg_client)
+      occupier = Occupier::Tenant.new(handle, mongo_client, pg_client)
       occupier.connect!
     end
 

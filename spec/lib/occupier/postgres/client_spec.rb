@@ -42,7 +42,7 @@ RSpec.describe Occupier::Postgres::Client do
 
       expect do
         client.connect('random_db')
-      end.to raise_error(RuntimeError, /Could not connect to database:/)
+      end.to raise_error(Occupier::Postgres::Client::CantConnectToPGDatabase, /Could not connect to database:/)
     end
 
     describe 'performance' do
@@ -51,7 +51,7 @@ RSpec.describe Occupier::Postgres::Client do
           client.connect(database_name) # warm up
 
           avg = Benchmark.ms do
-            2.times { |i| client.connect(database_name) }
+            2.times { client.connect(database_name) }
           end / 2
           # normally it should be under 1ms, but we are adding some margin
           expect(avg).to be < 2

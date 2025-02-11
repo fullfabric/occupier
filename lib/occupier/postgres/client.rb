@@ -6,6 +6,8 @@ module Occupier
     class Client
       extend Forwardable
 
+      CantConnectToPGDatabase = Class.new(StandardError)
+
       attr_reader :environment
 
       def initialize(environment = 'development', logger = nil)
@@ -28,7 +30,7 @@ module Occupier
 
         ActiveRecord::Base.connection
       rescue StandardError => e
-        raise "Could not connect to database: #{e.message}"
+        raise CantConnectToPGDatabase, "Could not connect to database: #{e.message}"
       end
 
       def reset(database_name)
