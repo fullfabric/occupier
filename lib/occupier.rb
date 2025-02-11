@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'mongo_mapper'
 require 'active_record'
+require_relative 'occupier/postgres/extensions/custom_adapter'
 
 module Occupier
 

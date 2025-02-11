@@ -11,7 +11,6 @@ RSpec.configure do |config|
     config  = YAML.load(ERB.new(File.read('config/mongo.yml')).result)["test"]
     @client = Mongo::Client.new(["#{config['host']}:#{config['port']}"])
     pg_config = YAML.load(ERB.new(File.read('config/database.yml')).result)['test']
-    ActiveRecord::Base.establish_connection(pg_config)
     @pg_client = Occupier::Postgres::Client.new("test", nil)
   end
 
