@@ -142,10 +142,24 @@ describe Occupier::Tenant do
     end
   end
 
-  context "resetting" do
-    context "an existing tenant" do
-      it "cleans the database" do
+  context 'dropping' do
+    context 'an existing tenant' do
+      it 'drops the database' do
+        tenant = Occupier::Tenant.new(handle, client)
 
+        tenant.create!
+        tenant.database['some_collection'].insert_one({ value: 1 })
+        expect(tenant.database['some_collection'].estimated_document_count).to eq 1
+
+        tenant.drop!
+        expect(tenant.exists?).to be false
+      end
+    end
+  end
+
+  context 'resetting' do
+    context 'an existing tenant' do
+      it 'cleans the database' do
         tenant = Occupier::Tenant.new(handle, client)
 
         tenant.create!
