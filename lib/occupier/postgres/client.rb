@@ -66,10 +66,6 @@ module Occupier
       # Connects to the database
       # when no database name is provided uses the database from the configuration
       def connect_to(database_name)
-        # Do not reconnect if the connection is already established
-        return if ActiveRecord::Base.connection.active? &&
-                  ActiveRecord::Base.connection.current_database == database_name
-
         ActiveRecord::Base.connection.change_database!(database_name)
       end
 
