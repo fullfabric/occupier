@@ -80,8 +80,7 @@ module Occupier
     end
 
     def reset!
-      @client.drop_database database_name
-      @pg_client.drop_database database_name
+      drop!
       create!
     end
 
@@ -92,6 +91,12 @@ module Occupier
 
     def exists?
       @client.database_names.include? database_name
+    end
+
+    def drop!
+      @client.drop_database database_name
+      @pg_client.drop_database database_name
+      self
     end
 
     private

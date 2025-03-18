@@ -164,4 +164,21 @@ describe Occupier::Tenant do
       end
     end
   end
+
+  context 'dropping' do
+    context 'an existing tenant' do
+      it 'drops the database' do
+        tenant = Occupier::Tenant.new(handle, client, pg_client)
+
+        tenant.create!
+        tenant.database['some_collection'].insert_one({ value: 1 })
+        expect(tenant.database['some_collection'].estimated_document_count).to eq 1
+        expect(pg_client.database_exists?("FF_test_#{handle}")).to be_truthy
+
+        tenant.drop!
+        expect(tenant.exists?).to be false
+        expect(pg_client.database_exists?("FF_test_#{handle}")).to be_falsey
+      end
+    end
+  end
 end
