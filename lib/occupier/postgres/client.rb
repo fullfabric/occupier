@@ -50,7 +50,7 @@ module Occupier
       end
 
       def drop_database(database_name)
-        connect.execute("DROP DATABASE IF EXISTS \"#{database_name}\"")
+        connect.execute("DROP DATABASE IF EXISTS \"#{database_name}\" WITH (FORCE)")
       end
 
       def drop_all
