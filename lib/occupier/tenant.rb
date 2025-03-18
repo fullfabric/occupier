@@ -59,7 +59,7 @@ module Occupier
     #
     def self.connect!(handle, environment = "development", logger = nil)
       mongo_client = Occupier::MongoMapper::Connection.new(environment, logger)
-      pg_client = Occupier::Postgres::Client.new(environment, nil)
+      pg_client = Occupier::Postgres::Client.new(environment, logger)
       occupier = Occupier::Tenant.new(handle, mongo_client, pg_client)
       occupier.connect!
     end
@@ -72,10 +72,8 @@ module Occupier
     #
     def connect!
       ensure_tenant_exists!
-      [
-        Thread.new { @client.connect(database_name) },
-        Thread.new { @pg_client.connect(database_name) }
-      ].each(&:join)
+      @client.connect(database_name)
+      @pg_client.connect(database_name)
       self
     end
 

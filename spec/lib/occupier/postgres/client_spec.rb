@@ -31,9 +31,21 @@ RSpec.describe Occupier::Postgres::Client do
   end
 
   describe '#connect' do
-    before { client.create(database_name) }
+    before do
+      client.create('FF_test_default')
+      client.create(database_name)
+    end
 
     it 'connects to the specified database' do
+      client.connect('FF_test_default')
+      expect(ActiveRecord::Base.connection.current_database).to eq('FF_test_default')
+      expect(ActiveRecord::Base.connection.execute('SELECT CURRENT_DATABASE()').to_a).to eq([{"current_database"=>"FF_test_default"}])
+      client.connect(database_name)
+      expect(ActiveRecord::Base.connection.current_database).to eq(database_name)
+      expect(ActiveRecord::Base.connection.execute('SELECT CURRENT_DATABASE()').to_a).to eq([{"current_database"=>database_name}])
+    end
+
+    it 'do not gives an raise' do
       expect { client.connect(database_name) }.not_to raise_error
     end
 
