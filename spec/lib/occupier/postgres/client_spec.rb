@@ -71,14 +71,15 @@ RSpec.describe Occupier::Postgres::Client do
       end
 
       describe 'when the database is the same as the connected one' do
+        let(:times) { 10 }
         before do
-          1..2.times { |i| client.create("#{database_name}#{i}") }
+          (1..times).each { |i| client.create("#{database_name}#{i}") }
         end
 
         it 'connection is under 5ms for a different db' do
           avg = Benchmark.ms do
-            2.times { |i| client.connect("#{database_name}#{i}") }
-          end / 2
+            (1..times).each { |i| client.connect("#{database_name}#{i}") }
+          end / times
           # normally it should be under 5ms, but we are adding some margin
           expect(avg).to be < 10
         end

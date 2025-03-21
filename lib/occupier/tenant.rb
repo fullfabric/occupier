@@ -73,7 +73,8 @@ module Occupier
     def connect!
       ensure_tenant_exists!
       @client.connect(database_name)
-      @pg_client.connect(database_name)
+      # temporarily keep only the default database for postgres
+      @pg_client.connect(database_name) if can_connect_to_pg?
       self
     end
 
@@ -98,6 +99,10 @@ module Occupier
     end
 
     private
+
+      def can_connect_to_pg?
+        ENV['ENABLE_POSTGRES'] == 'true'
+      end
 
       def ensure_tenant_exists!
         raise ::Occupier::NotFound.new("tenant #{@handle} not found in environment #{@environment}") unless exists?
