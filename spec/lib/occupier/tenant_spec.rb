@@ -112,8 +112,11 @@ describe Occupier::Tenant do
       context 'with postgres' do
         let(:tenant) { Occupier::Tenant.new(handle, client, pg_client).create! }
 
-        before { ENV['ENABLE_POSTGRES'] = 'true' }
-        after { ENV['ENABLE_POSTGRES'] = 'false' }
+        around do |each|
+          ENV['ENABLE_POSTGRES'] = 'true'
+          each.run
+          ENV['ENABLE_POSTGRES'] = 'false'
+        end
 
         it 'connects' do
           expect(Occupier::Tenant.new(tenant.handle, client, pg_client).connect!).to be_a Occupier::Tenant
@@ -129,7 +132,6 @@ describe Occupier::Tenant do
 
       context 'without postgres' do
         let(:tenant) { Occupier::Tenant.new(handle, client, pg_client).create! }
-        before { ENV['ENABLE_POSTGRES'] = 'false' }
 
         it 'connects' do
           expect(Occupier::Tenant.new(tenant.handle, client, pg_client).connect!).to be_a Occupier::Tenant
