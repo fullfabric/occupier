@@ -109,15 +109,39 @@ describe Occupier::Tenant do
 
   context 'connecting to' do
     context 'an existing tenant' do
-      let(:tenant) { Occupier::Tenant.new(handle, client, pg_client).create! }
+      context 'with postgres' do
+        let(:tenant) { Occupier::Tenant.new(handle, client, pg_client).create! }
 
-      it 'connects' do
-        expect(Occupier::Tenant.new(tenant.handle, client, pg_client).connect!).to be_a Occupier::Tenant
+        around do |each|
+          ENV['ENABLE_POSTGRES'] = 'true'
+          each.run
+          ENV['ENABLE_POSTGRES'] = 'false'
+        end
+
+        it 'connects' do
+          expect(Occupier::Tenant.new(tenant.handle, client, pg_client).connect!).to be_a Occupier::Tenant
+          expect(ActiveRecord::Base.connection.current_database).to eq "FF_test_#{handle}"
+        end
+
+        context 'short form' do
+          it 'connects using the short form' do
+            expect(Occupier::Tenant.connect!(tenant.handle, :test)).to be_a Occupier::Tenant
+          end
+        end
       end
 
-      context 'short form' do
-        it 'connects using the short form' do
-          expect(Occupier::Tenant.connect!(tenant.handle, :test)).to be_a Occupier::Tenant
+      context 'without postgres' do
+        let(:tenant) { Occupier::Tenant.new(handle, client, pg_client).create! }
+
+        it 'connects' do
+          expect(Occupier::Tenant.new(tenant.handle, client, pg_client).connect!).to be_a Occupier::Tenant
+          expect(ActiveRecord::Base.connection.current_database).to eq "postgres" # default db
+        end
+
+        context 'short form' do
+          it 'connects using the short form' do
+            expect(Occupier::Tenant.connect!(tenant.handle, :test)).to be_a Occupier::Tenant
+          end
         end
       end
     end
