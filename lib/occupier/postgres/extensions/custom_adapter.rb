@@ -11,8 +11,6 @@ module CustomPostgreSQLAdapter
       pg_config.merge!(dbname: db)
       clear_cache!
       @connection.reset
-      set_standard_conforming_strings
-
   end
 
   def restore_default_database!

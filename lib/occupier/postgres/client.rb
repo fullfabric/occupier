@@ -13,8 +13,6 @@ module Occupier
       def initialize(environment = 'development', logger = nil)
         @environment = environment.to_s
         @logger = logger
-
-        initial_connection
       end
 
       def create(database_name)
@@ -58,10 +56,6 @@ module Occupier
       end
 
       private
-
-      def initial_connection
-        ActiveRecord::Base.establish_connection(db_config)
-      end
 
       # Connects to the database
       # when no database name is provided uses the database from the configuration

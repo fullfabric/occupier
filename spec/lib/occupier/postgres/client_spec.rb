@@ -71,7 +71,7 @@ RSpec.describe Occupier::Postgres::Client do
       end
 
       describe 'when the database is the same as the connected one' do
-        let(:times) { 10 }
+        let(:times) { 20 }
         before do
           (1..times).each { |i| client.create("#{database_name}#{i}") }
         end
