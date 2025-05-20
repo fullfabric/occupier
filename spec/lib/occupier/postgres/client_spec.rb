@@ -18,7 +18,7 @@ RSpec.describe Occupier::Postgres::Client do
 
     it 'raises an error if the database already exists' do
       client.create(database_name)
-      expect { client.create(database_name) }.to raise_error(RuntimeError, 'database already exists')
+      expect { client.create(database_name) }.to raise_error(Occupier::AlreadyExists, "database #{database_name} already exists in environment #{environment} on Postgres")
     end
   end
 
@@ -27,6 +27,19 @@ RSpec.describe Occupier::Postgres::Client do
       expect(ActiveRecord::Base.connection.active?).to be_truthy
       client.close
       expect(ActiveRecord::Base.connection.active?).to be_falsey
+    end
+  end
+
+  describe "#connect - no setup" do
+    before { ActiveRecord::Base.clear_all_connections! }
+
+    it "establishes an initial connection when first called" do
+      expect(ActiveRecord::Base).to receive(:establish_connection).once.and_call_original
+
+      expect(ActiveRecord::Base.connected?).to be_falsey
+      client.connect
+      expect(ActiveRecord::Base.connected?).to be_truthy
+      client.connect
     end
   end
 
