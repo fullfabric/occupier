@@ -13,10 +13,13 @@ module Occupier
       def initialize(environment = 'development', logger = nil)
         @environment = environment.to_s
         @logger = logger
+        @connected = false
       end
 
       def create(database_name)
-        raise 'database already exists' if database_exists? database_name
+        if database_exists? database_name
+          raise ::Occupier::AlreadyExists.new("database #{database_name} already exists in environment #{@environment} on Postgres")
+        end
 
         connect.execute("CREATE DATABASE \"#{database_name}\"")
       end
@@ -60,6 +63,8 @@ module Occupier
       # Connects to the database
       # when no database name is provided uses the database from the configuration
       def connect_to(database_name)
+        establish_initial_connection unless @connected
+
         ActiveRecord::Base.connection.change_database!(database_name)
       end
 
@@ -70,6 +75,11 @@ module Occupier
           database_yml = YAML.safe_load(template, aliases: true)
           database_yml[@environment]
         end
+      end
+
+      def establish_initial_connection
+        ActiveRecord::Base.establish_connection(db_config)
+        @connected = true
       end
     end
   end
